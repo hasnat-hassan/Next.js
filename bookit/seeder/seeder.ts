@@ -1,4 +1,4 @@
-import room from "@/backend/models/room";
+import room from "../backend/modals/room";
 import mongoose from "mongoose";
 import { rooms } from "./data";
 
