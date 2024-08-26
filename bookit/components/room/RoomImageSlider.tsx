@@ -1,5 +1,5 @@
 import React from "react";
-import { IImage } from "@/backend/modals/room";
+import { IImage } from "@/backend/models/room";
 import { Carousel } from "react-bootstrap";
 import Image from "next/image";
 
@@ -18,8 +18,7 @@ const RoomImageSlider = ({ images }: Props) => {
                 className="d-block m-auto"
                 src={image?.url}
                 alt={image?.url}
-                layout="responsive"
-                fill={true}
+                layout="fill"
               />
             </div>
           </Carousel.Item>

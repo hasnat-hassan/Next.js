@@ -1,5 +1,5 @@
 "use client";
-import { IRoom } from "@/backend/modals/room";
+import { IRoom } from "@/backend/models/room";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";

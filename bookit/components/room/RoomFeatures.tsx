@@ -1,4 +1,4 @@
-import { IRoom } from "@/backend/modals/room";
+import { IRoom } from "@/backend/models/room";
 import React from "react";
 
 interface Props {
@@ -18,23 +18,58 @@ const RoomFeatures = ({ room }: Props) => {
         <p>{room?.numOfBeds} Beds</p>
       </div>
       <div className="room-feature">
-        <i className="fa fa-check text-success" aria-hidden="true"></i>
+        <i
+          className={
+            room?.isBreakFast
+              ? "fa fa-check text-success"
+              : "fa fa-times text-danger"
+          }
+          aria-hidden="true"
+        ></i>
         <p>Breakfast</p>
       </div>
       <div className="room-feature">
-        <i className="fa fa-check text-success" aria-hidden="true"></i>
+        <i
+          className={
+            room?.isInternet
+              ? "fa fa-check text-success"
+              : "fa fa-times text-danger"
+          }
+          aria-hidden="true"
+        ></i>
         <p>Internet</p>
       </div>
       <div className="room-feature">
-        <i className="fa fa-check text-success" aria-hidden="true"></i>
+        <i
+          className={
+            room?.isAirConditioned
+              ? "fa fa-check text-success"
+              : "fa fa-times text-danger"
+          }
+          aria-hidden="true"
+        ></i>
         <p>Air Conditioned</p>
       </div>
       <div className="room-feature">
-        <i className="fa fa-check text-success" aria-hidden="true"></i>
+        <i
+          className={
+            room?.isPetsAllowed
+              ? "fa fa-check text-success"
+              : "fa fa-times text-danger"
+          }
+          aria-hidden="true"
+        ></i>
         <p>Pets Allowed</p>
       </div>
       <div className="room-feature">
-        <i className="fa fa-check text-success" aria-hidden="true"></i>
+        <i
+          className={
+            room?.isRoomCleaning
+              ? "fa fa-check text-success"
+              : "fa fa-times text-danger"
+          }
+          aria-hidden="true"
+        ></i>
         <p>Room Cleaning</p>
       </div>
     </div>

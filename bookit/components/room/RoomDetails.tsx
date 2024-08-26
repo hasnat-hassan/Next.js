@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { IRoom } from "@/backend/modals/room";
+import { IRoom } from "@/backend/models/room";
 import StarRatings from "react-star-ratings";
 import RoomImageSlider from "./RoomImageSlider";
 import RoomFeatures from "./RoomFeatures";

@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { IUser } from "./user";
 
 export interface IImage extends Document {
   public_id: string;
@@ -40,7 +41,7 @@ export interface IRoom extends Document {
   createdAt: Date;
 }
 
-const roomSchema: Schema = new Schema({
+const roomSchema: Schema<IRoom> = new Schema({
   name: {
     type: String,
     required: [true, "Please enter room name"],
