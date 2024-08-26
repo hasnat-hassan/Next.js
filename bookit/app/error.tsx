@@ -17,7 +17,9 @@ export default function Error({
             Something went Wrong
           </p>
           <p className="lead">Sorry for inconvience</p>
-          <button onClick={() => reset?.()}>Try again</button>
+          <button className="btn btn-primary" onClick={() => reset?.()}>
+            Try again
+          </button>
         </div>
       </div>
     </div>

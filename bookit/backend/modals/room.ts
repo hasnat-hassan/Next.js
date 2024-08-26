@@ -10,77 +10,74 @@ export interface IReview extends Document {
   rating: number;
   comment: string;
 }
-
-export interface ILoction {
+export interface ILocation {
   type: string;
   coordinates: number[];
-  formattedAddress: string;
   city: string;
   state: string;
   zipCode: string;
   country: string;
 }
-
 export interface IRoom extends Document {
-  name: string;
+  name: String;
   description: string;
   pricePerNight: number;
   address: string;
-  location: ILoction;
+  location: ILocation;
   guestCapacity: number;
   numOfBeds: number;
-  isInternet: boolean;
-  isBreakfast: boolean;
-  isAirCondition: boolean;
-  isPetsAllowed: boolean;
-  isRoomCleaning: boolean;
+  isInternet: Boolean;
+  isBreakFast: Boolean;
+  isAirConditioned: Boolean;
+  isPetsAllowed: Boolean;
+  isRoomCleaning: Boolean;
   ratings: number;
   numOfReviews: number;
-  images: IImage[];
+  images: IImage;
   category: string;
-  reviews: IReview[];
+  review: IReview[];
   user: mongoose.Schema.Types.ObjectId;
   createdAt: Date;
 }
+
 const roomSchema: Schema = new Schema({
   name: {
     type: String,
-    required: [true, "Please enter a room name"],
+    required: [true, "Please enter room name"],
     trim: true,
-    maxLength: [200, "Room name cannot exceed 100 characters"],
+    maxLength: [200, "Room name connot exceed 100 characters"],
   },
   description: {
     type: String,
-    required: [true, "Please enter a room description"],
+    required: [true, "Please enter room name"],
   },
   pricePerNight: {
     type: Number,
-    required: [true, "Please enter a room price per night"],
+    required: [true, "Please enter room price per night"],
     default: 0.0,
   },
   address: {
     type: String,
-    required: [true, "Please enter a room address"],
+    required: [true, "Please enter room address"],
   },
   location: {
     type: {
       type: String,
       enum: ["Point"],
     },
-    coordinates: {
+    coordintes: {
       type: [Number],
-
-      index: "2dsphere",
+      index: "2dspere",
     },
     formattedAddress: String,
     city: String,
     state: String,
     zipCode: String,
-    country: String,
+    countery: String,
   },
   guestCapacity: {
     type: Number,
-    required: [true, "Please enter a room guest capacity"],
+    required: [true, "Please enter room guest capacity"],
   },
   numOfBeds: {
     type: Number,
@@ -90,11 +87,11 @@ const roomSchema: Schema = new Schema({
     type: Boolean,
     default: false,
   },
-  isBreakfast: {
+  isBreakFast: {
     type: Boolean,
     default: false,
   },
-  isAirCondition: {
+  isAirConditioned: {
     type: Boolean,
     default: false,
   },
@@ -107,12 +104,8 @@ const roomSchema: Schema = new Schema({
     default: false,
   },
   ratings: {
-    type: [Number],
-    default: 0,
-  },
-  numOfReviews: {
     type: Number,
-    default: 0,
+    dafault: 0,
   },
   images: [
     {
@@ -128,13 +121,13 @@ const roomSchema: Schema = new Schema({
   ],
   category: {
     type: String,
-    required: [true, "Please select a room category"],
+    required: [true, "Please enter room category"],
     enum: {
       values: ["King", "Single", "Twins"],
-      message: "Please select correct room category",
+      message: "Please select correct category for room",
     },
   },
-  reviews: [
+  review: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,

@@ -5,10 +5,11 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import APIFilters from "../utils/apiFilters";
 
 export const allRooms = catchAsyncErrors(async (req: NextRequest) => {
-  const resPerPage: number = 4;
+  const resPerPage: number = 40;
 
   const { searchParams } = new URL(req.url);
-  throw new ErrorHandler("Hello", 400);
+
+  // throw new ErrorHandler("Hello", 400);
 
   const queryStr: any = {};
   searchParams.forEach((value, key) => {
@@ -24,6 +25,7 @@ export const allRooms = catchAsyncErrors(async (req: NextRequest) => {
 
   apiFilters.pagination(resPerPage);
   rooms = await apiFilters.query.clone();
+  console.log(resPerPage, "resPerPage");
 
   return NextResponse.json({
     success: true,
