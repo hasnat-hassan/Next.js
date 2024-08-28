@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { IUser } from "./user";
 
 export interface IImage extends Document {
   public_id: string;
@@ -11,32 +10,35 @@ export interface IReview extends Document {
   rating: number;
   comment: string;
 }
+
 export interface ILocation {
   type: string;
   coordinates: number[];
+  formattedAddress: string;
   city: string;
   state: string;
   zipCode: string;
   country: string;
 }
+
 export interface IRoom extends Document {
-  name: String;
+  name: string;
   description: string;
   pricePerNight: number;
   address: string;
   location: ILocation;
   guestCapacity: number;
   numOfBeds: number;
-  isInternet: Boolean;
-  isBreakFast: Boolean;
-  isAirConditioned: Boolean;
-  isPetsAllowed: Boolean;
-  isRoomCleaning: Boolean;
+  isInternet: boolean;
+  isBreakfast: boolean;
+  isAirConditioned: boolean;
+  isPetsAllowed: boolean;
+  isRoomCleaning: boolean;
   ratings: number;
   numOfReviews: number;
-  images: IImage;
+  images: IImage[];
   category: string;
-  review: IReview[];
+  reviews: IReview[];
   user: mongoose.Schema.Types.ObjectId;
   createdAt: Date;
 }
@@ -46,11 +48,11 @@ const roomSchema: Schema<IRoom> = new Schema({
     type: String,
     required: [true, "Please enter room name"],
     trim: true,
-    maxLength: [200, "Room name connot exceed 100 characters"],
+    maxLength: [200, "Room name cannot exceed 100 characters"],
   },
   description: {
     type: String,
-    required: [true, "Please enter room name"],
+    required: [true, "Please enter room description"],
   },
   pricePerNight: {
     type: Number,
@@ -66,15 +68,15 @@ const roomSchema: Schema<IRoom> = new Schema({
       type: String,
       enum: ["Point"],
     },
-    coordintes: {
+    coordinates: {
       type: [Number],
-      index: "2dspere",
+      index: "2dsphere",
     },
     formattedAddress: String,
     city: String,
     state: String,
     zipCode: String,
-    countery: String,
+    country: String,
   },
   guestCapacity: {
     type: Number,
@@ -88,7 +90,7 @@ const roomSchema: Schema<IRoom> = new Schema({
     type: Boolean,
     default: false,
   },
-  isBreakFast: {
+  isBreakfast: {
     type: Boolean,
     default: false,
   },
@@ -106,7 +108,11 @@ const roomSchema: Schema<IRoom> = new Schema({
   },
   ratings: {
     type: Number,
-    dafault: 0,
+    default: 0,
+  },
+  numOfReviews: {
+    type: Number,
+    default: 0,
   },
   images: [
     {
@@ -128,7 +134,7 @@ const roomSchema: Schema<IRoom> = new Schema({
       message: "Please select correct category for room",
     },
   },
-  review: [
+  reviews: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,

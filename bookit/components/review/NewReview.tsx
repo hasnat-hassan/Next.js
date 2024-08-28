@@ -11,7 +11,6 @@ const NewReview = () => {
       >
         Submit Your Review
       </button>
-
       <div
         className="modal fade"
         id="ratingModal"

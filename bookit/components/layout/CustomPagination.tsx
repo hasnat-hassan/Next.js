@@ -1,8 +1,8 @@
 "use client";
+
 import React from "react";
 import Pagination from "react-js-pagination";
 import { useSearchParams, useRouter } from "next/navigation";
-// import { useRouter } from "next/router";
 
 interface Props {
   resPerPage: number;
@@ -16,14 +16,17 @@ const CustomPagination = ({ resPerPage, filteredRoomsCount }: Props) => {
   page = Number(page);
 
   let queryParams;
+
   const handlePageChange = (currentPage: string) => {
     if (typeof window !== "undefined") {
       queryParams = new URLSearchParams(window.location.search);
+
       if (queryParams.has("page")) {
         queryParams.set("page", currentPage);
       } else {
         queryParams.append("page", currentPage);
       }
+
       const path = `${window.location.pathname}?${queryParams.toString()}`;
       router.push(path);
     }
@@ -31,7 +34,7 @@ const CustomPagination = ({ resPerPage, filteredRoomsCount }: Props) => {
   return (
     <div>
       {resPerPage < filteredRoomsCount && (
-        <div className="d-flex justify-content-center mt-5 ">
+        <div className="d-flex justify-content-center mt-5">
           <Pagination
             activePage={page}
             itemsCountPerPage={resPerPage}

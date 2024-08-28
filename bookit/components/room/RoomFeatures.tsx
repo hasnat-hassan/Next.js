@@ -20,7 +20,7 @@ const RoomFeatures = ({ room }: Props) => {
       <div className="room-feature">
         <i
           className={
-            room?.isBreakFast
+            room?.isBreakfast
               ? "fa fa-check text-success"
               : "fa fa-times text-danger"
           }

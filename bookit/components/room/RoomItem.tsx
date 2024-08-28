@@ -1,4 +1,5 @@
 "use client";
+
 import { IRoom } from "@/backend/models/room";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,7 +19,7 @@ const RoomItem = ({ room }: Props) => {
           src={
             room?.images?.length > 0
               ? room.images[0].url
-              : "images/default_room_image.jpg"
+              : "/images/default_room_image.jpg"
           }
           alt={room?.name}
           height={170}
@@ -36,8 +37,7 @@ const RoomItem = ({ room }: Props) => {
           <div>
             <div className="d-flex">
               <StarRatings
-                // rating={4}
-                rating={Number(room?.rating) || 0}
+                rating={room?.ratings}
                 starRatedColor="#e61e4d"
                 numberOfStars={5}
                 starDimension="18px"

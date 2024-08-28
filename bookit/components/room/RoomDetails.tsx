@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { IRoom } from "@/backend/models/room";
+import React from "react";
 import StarRatings from "react-star-ratings";
 import RoomImageSlider from "./RoomImageSlider";
 import RoomFeatures from "./RoomFeatures";
@@ -25,7 +25,7 @@ const RoomDetails = ({ data }: Props) => {
 
       <div className="ratings mt-auto mb-3">
         <StarRatings
-          rating={+room?.ratings || 0}
+          rating={+room?.ratings}
           starRatedColor="#e61e4d"
           numberOfStars={5}
           starDimension="22px"
@@ -34,7 +34,6 @@ const RoomDetails = ({ data }: Props) => {
         />
         <span className="no-of-reviews">({room?.numOfReviews} Reviews)</span>
       </div>
-
       <RoomImageSlider images={room?.images} />
 
       <div className="row my-5">
@@ -47,10 +46,10 @@ const RoomDetails = ({ data }: Props) => {
 
         <div className="col-12 col-md-6 col-lg-4">
           <BookingDatePicker room={room} />
-
-          {/* Room Map - TODO */}
+          // Room Map - TODO
         </div>
       </div>
+
       <NewReview />
       <ListReviews />
     </div>

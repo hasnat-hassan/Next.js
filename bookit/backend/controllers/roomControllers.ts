@@ -4,19 +4,16 @@ import ErrorHandler from "../utils/errorHandler";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import APIFilters from "../utils/apiFilters";
 
+// Get all rooms  =>  /api/rooms
 export const allRooms = catchAsyncErrors(async (req: NextRequest) => {
   const resPerPage: number = 4;
 
   const { searchParams } = new URL(req.url);
 
-  // throw new ErrorHandler("Hello", 400);
-
   const queryStr: any = {};
   searchParams.forEach((value, key) => {
     queryStr[key] = value;
   });
-
-  // const roomsCount: number = await Room.countDocuments();
 
   const apiFilters = new APIFilters(Room, queryStr).search().filter();
 
@@ -28,14 +25,13 @@ export const allRooms = catchAsyncErrors(async (req: NextRequest) => {
 
   return NextResponse.json({
     success: true,
-    // roomsCount,
     filteredRoomsCount,
     resPerPage,
     rooms,
   });
 });
 
-// Create new room detail => /api/rooms
+// Create new room  =>  /api/admin/rooms
 export const newRoom = catchAsyncErrors(async (req: NextRequest) => {
   const body = await req.json();
 
@@ -47,14 +43,15 @@ export const newRoom = catchAsyncErrors(async (req: NextRequest) => {
   });
 });
 
-// GET room detail => /api/room/id
+// Get room details  =>  /api/rooms/:id
 export const getRoomDetails = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const room = await Room.findById(params.id);
 
     if (!room) {
-      throw new ErrorHandler("Room not found ", 404);
+      throw new ErrorHandler("Room not found", 404);
     }
+
     return NextResponse.json({
       success: true,
       room,
@@ -62,41 +59,42 @@ export const getRoomDetails = catchAsyncErrors(
   }
 );
 
-// Create new room detail => /api/room/id
-export const updateRoom = async (
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
-  let room = await Room.findById(params.id);
-  const body = await req.json();
+// Update room details  =>  /api/admin/rooms/:id
+export const updateRoom = catchAsyncErrors(
+  async (req: NextRequest, { params }: { params: { id: string } }) => {
+    let room = await Room.findById(params.id);
+    const body = await req.json();
 
-  if (!room) {
-    throw new ErrorHandler("Room not found ", 404);
+    if (!room) {
+      throw new ErrorHandler("Room not found", 404);
+    }
+
+    room = await Room.findByIdAndUpdate(params.id, body, {
+      new: true,
+    });
+
+    return NextResponse.json({
+      success: true,
+      room,
+    });
   }
+);
 
-  room = await Room.findByIdAndUpdate(params.id, body, { new: true });
+// Delete room details  =>  /api/admin/rooms/:id
+export const deleteRoom = catchAsyncErrors(
+  async (req: NextRequest, { params }: { params: { id: string } }) => {
+    const room = await Room.findById(params.id);
 
-  return NextResponse.json({
-    success: true,
-    room,
-  });
-};
-// Delete room detail => /api/room/id
-export const deleteRoom = async (
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) => {
-  let room = await Room.findById(params.id);
+    if (!room) {
+      throw new ErrorHandler("Room not found", 404);
+    }
 
-  if (!room) {
-    throw new ErrorHandler("Room not found ", 404);
+    // TODO - Delete images associated with the room
+
+    await room.deleteOne();
+
+    return NextResponse.json({
+      success: true,
+    });
   }
-
-  // TODO - Delete images associated with room
-
-  await Room.deleteOne();
-
-  return NextResponse.json({
-    success: true,
-  });
-};
+);

@@ -28,10 +28,12 @@ async function auth(req: NextApiRequest, res: NextApiResponse) {
           if (!user) {
             throw new Error("Invalid email or password");
           }
+
           const isPasswordMatched = await bcrypt.compare(
             password,
             user.password
           );
+
           if (!isPasswordMatched) {
             throw new Error("Invalid email or password");
           }
@@ -44,12 +46,16 @@ async function auth(req: NextApiRequest, res: NextApiResponse) {
       jwt: async ({ token, user }) => {
         user && (token.user = user);
 
+        // TODO - update session when user is updated
+
         return token;
       },
       session: async ({ session, token }) => {
         session.user = token.user as IUser;
-        // @ts-ignore
+
+        //@ts-ignore
         delete session?.user?.password;
+
         return session;
       },
     },

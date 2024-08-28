@@ -1,5 +1,5 @@
 "use client";
-import { rooms } from "@/seeder/data";
+
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -7,7 +7,9 @@ const Search = () => {
   const [location, setLocation] = useState("");
   const [guests, setGuests] = useState("");
   const [category, setCategory] = useState("");
+
   const router = useRouter();
+
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -21,6 +23,7 @@ const Search = () => {
 
     router.push(`/?${queryString}`);
   };
+
   return (
     <div className="row wrapper mt-5">
       <div className="col-10 col-lg-5">

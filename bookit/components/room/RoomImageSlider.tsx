@@ -1,7 +1,7 @@
-import React from "react";
 import { IImage } from "@/backend/models/room";
-import { Carousel } from "react-bootstrap";
 import Image from "next/image";
+import React from "react";
+import { Carousel } from "react-bootstrap";
 
 interface Props {
   images: IImage[];
@@ -18,7 +18,8 @@ const RoomImageSlider = ({ images }: Props) => {
                 className="d-block m-auto"
                 src={image?.url}
                 alt={image?.url}
-                layout="fill"
+                // layout="fill"
+                fill={true}
               />
             </div>
           </Carousel.Item>
@@ -28,8 +29,8 @@ const RoomImageSlider = ({ images }: Props) => {
           <div style={{ widows: "100%", height: "460px" }}>
             <Image
               className="d-block m-auto"
-              src="/images/default_room_image.jpg"
-              alt="Default Room Image"
+              src={"/images/default_room_image.jpg"}
+              alt={"/images/default_room_image.jpg"}
               layout="fill"
             />
           </div>

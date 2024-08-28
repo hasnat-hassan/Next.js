@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUser extends Document {
@@ -12,10 +12,10 @@ export interface IUser extends Document {
   role: string;
   createdAt: Date;
   resetPasswordToken: string;
-  resetPasswordExpires: Date;
+  resetPasswordExpire: Date;
 }
 
-const userSchemna: Schema<IUser> = new mongoose.Schema({
+const userSchema: Schema<IUser> = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter your name"],
@@ -28,7 +28,7 @@ const userSchemna: Schema<IUser> = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minlength: [6, "Your Password must be longer than 6 characters"],
+    minlength: [6, "Your password must be longer than 6 characters"],
     select: false,
   },
   avatar: {
@@ -44,11 +44,11 @@ const userSchemna: Schema<IUser> = new mongoose.Schema({
     default: Date.now,
   },
   resetPasswordToken: String,
-  resetPasswordExpires: Date,
+  resetPasswordExpire: Date,
 });
 
-// Encrypting password for saving the user
-userSchemna.pre("save", async function (next) {
+// Encrypting password before saving the user
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
@@ -57,4 +57,4 @@ userSchemna.pre("save", async function (next) {
 });
 
 export default mongoose.models.User ||
-  mongoose.model<IUser>("User", userSchemna);
+  mongoose.model<IUser>("User", userSchema);

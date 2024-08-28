@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import User from "../models/user";
 
-// REgister user => /api/auth/register
+// Register user  =>  /api/auth/register
 export const registerUser = catchAsyncErrors(async (req: NextRequest) => {
   const body = await req.json();
 
@@ -13,6 +13,7 @@ export const registerUser = catchAsyncErrors(async (req: NextRequest) => {
     email,
     password,
   });
+
   return NextResponse.json({
     success: true,
   });

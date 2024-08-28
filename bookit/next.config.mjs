@@ -6,7 +6,7 @@ const nextConfig = {
     DB_URI: "",
 
     NEXTAUTH_URL: "http://localhost:3000",
-    NEXTAUTH_SECRET: "JGFHJDFDJDKWNXZXM1324NIOO5WHEDNXS6JWURY93QTELSX",
+    NEXTAUTH_SECRET: "KSDFJKLSDJFLKSDFJSLDKF934KJLDJGDLKGFJDF",
   },
   images: {
     remotePatterns: [
