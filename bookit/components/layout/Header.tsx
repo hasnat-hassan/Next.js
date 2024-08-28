@@ -1,16 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setIsAuthenticated, setUser } from "@/redux/features/userSlice";
 
 const Header = () => {
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+
   const { data } = useSession();
+  useEffect(() => {
+    if (data) {
+      dispatch(setUser(data?.user));
+      dispatch(setIsAuthenticated(true));
+    }
+  }, [data]);
 
   const logoutHandler = () => {
     signOut();
   };
-
+  console.log(user);
   return (
     <nav className="navbar sticky-top py-2">
       <div className="container">
@@ -27,7 +38,7 @@ const Header = () => {
         </div>
 
         <div className="col-6 col-lg-3 mt-3 mt-md-0 text-end">
-          {data?.user ? (
+          {user ? (
             <div className="ml-4 dropdown d-line">
               <button
                 className="btn dropdown-toggle"
@@ -40,9 +51,9 @@ const Header = () => {
                   <img
                     src={
                       // @ts-ignore
-                      data?.user?.avatar
+                      user?.avatar
                         ? // @ts-ignore
-                          data?.user?.url
+                          user?.url
                         : "/images/default_avatar.jpg"
                     }
                     alt="John Doe"
@@ -51,10 +62,7 @@ const Header = () => {
                     width="50"
                   />
                 </figure>
-                <span className="placeholder-glow ps-1">
-                  {" "}
-                  {data?.user?.name}
-                </span>
+                <span className="placeholder-glow ps-1"> {user?.name}</span>
               </button>
 
               <div
