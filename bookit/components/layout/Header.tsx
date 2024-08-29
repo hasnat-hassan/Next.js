@@ -21,7 +21,6 @@ const Header = () => {
   const logoutHandler = () => {
     signOut();
   };
-  console.log(user);
   return (
     <nav className="navbar sticky-top py-2">
       <div className="container">
