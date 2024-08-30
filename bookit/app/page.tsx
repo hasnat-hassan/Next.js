@@ -8,6 +8,7 @@ export const metadata = {
 const getRooms = async (searchParams: string) => {
   const urlParams = new URLSearchParams(searchParams);
   const queryString = urlParams.toString();
+
   const res = await fetch(`${process.env.API_URL}/api/rooms?${queryString}`, {
     cache: "no-cache",
   });
@@ -20,7 +21,8 @@ export default async function HomePage({
   searchParams: string;
 }) {
   const data = await getRooms(searchParams);
-  if (data?.message) {
+
+  if (data?.errMessage) {
     return <Error error={data} />;
   }
 

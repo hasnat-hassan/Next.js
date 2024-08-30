@@ -1,4 +1,5 @@
 "use client";
+
 import {
   useLazyUpdateSessionQuery,
   useUpdateProfileMutation,
@@ -6,13 +7,14 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 import { setUser } from "@/redux/features/userSlice";
 
 const UpdateProfile = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -21,39 +23,33 @@ const UpdateProfile = () => {
   const [updateProfile, { isLoading, isSuccess, error }] =
     useUpdateProfileMutation();
 
-  const [updateSession] = useLazyUpdateSessionQuery();
+  const [updateSession, { data }] = useLazyUpdateSessionQuery();
+
+  if (data) dispatch(setUser(data?.user));
 
   useEffect(() => {
     if (currentUser) {
-      setName(currentUser.name);
-      setEmail(currentUser.email);
-    }
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      // @ts-ignore
-      updateSession()
-        .unwrap()
-        .then(() => {
-          router.refresh(); // Refresh page to reflect updated data
-        })
-        .catch((error) => {
-          console.error("Failed to update session", error);
-        });
+      setName(currentUser?.name);
+      setEmail(currentUser?.email);
     }
 
     if (error && "data" in error) {
-      const errorMessage = (error.data as { message?: string })?.message;
-      if (errorMessage) {
-        toast.error(errorMessage);
-      }
+      toast.error(error?.data?.errMessage);
     }
-  }, [isSuccess, error]);
+
+    if (isSuccess) {
+      //@ts-ignore
+      updateSession();
+
+      router.refresh();
+    }
+  }, [currentUser, error, isSuccess]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const userData = { name, email };
+
     updateProfile(userData);
   };
 

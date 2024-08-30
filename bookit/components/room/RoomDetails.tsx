@@ -25,7 +25,7 @@ const RoomDetails = ({ data }: Props) => {
 
       <div className="ratings mt-auto mb-3">
         <StarRatings
-          rating={+room?.ratings}
+          rating={room?.ratings}
           starRatedColor="#e61e4d"
           numberOfStars={5}
           starDimension="22px"

@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
-import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setIsAuthenticated, setUser } from "@/redux/features/userSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import React, { useEffect } from "react";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
 
   const { data } = useSession();
+
   useEffect(() => {
     if (data) {
       dispatch(setUser(data?.user));
@@ -21,6 +22,7 @@ const Header = () => {
   const logoutHandler = () => {
     signOut();
   };
+
   return (
     <nav className="navbar sticky-top py-2">
       <div className="container">
@@ -49,10 +51,8 @@ const Header = () => {
                 <figure className="avatar avatar-nav">
                   <img
                     src={
-                      // @ts-ignore
                       user?.avatar
-                        ? // @ts-ignore
-                          user?.url
+                        ? user?.avatar?.url
                         : "/images/default_avatar.jpg"
                     }
                     alt="John Doe"
@@ -90,16 +90,14 @@ const Header = () => {
             <>
               {data === undefined && (
                 <div className="placeholder-glow">
-                  <figure className="avatar avatar nav placeholder bg-secondary">
-                    <span className="placeholder w-25 bg-secondary ms-2"></span>
-                  </figure>
+                  <figure className="avatar avatar-nv placeholder bg-secondary"></figure>
                   <span className="placeholder w-25 bg-secondary ms-2"></span>
                 </div>
               )}
               {data === null && (
                 <Link
                   href="/login"
-                  className="btn btn-danger px-4 text-white login-header-btn"
+                  className="btn btn-danger px-4 text-white login-header-btn float-right"
                 >
                   Login
                 </Link>

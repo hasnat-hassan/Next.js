@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
 
 const UserSidebar = () => {
-  const menuItems = [
+  const pathname = usePathname();
+
+  const menuItem = [
     {
       name: "Update Profile",
       url: "/me/update",
@@ -10,7 +15,7 @@ const UserSidebar = () => {
     },
     {
       name: "Upload Avatar",
-      url: "/me/update_avatar",
+      url: "/me/upload_avatar",
       icon: "fas fa-user-circle",
     },
     {
@@ -20,17 +25,25 @@ const UserSidebar = () => {
     },
   ];
 
+  const [activeMenuItem, setActiveMenuItem] = useState(pathname);
+
+  const handleMenuItemClick = (menuItem: string) => {
+    setActiveMenuItem(menuItem);
+  };
+
   return (
     <div className="list-group mt-5 pl-4">
-      {menuItems.map((menuItems, index) => (
+      {menuItem.map((menuItem, index) => (
         <Link
           key={index}
-          href={menuItems.url}
-          className="fw-bold list-group-item list-group-item-action active"
-          aria-current="true"
+          href={menuItem.url}
+          className={`fw-bold list-group-item list-group-item-action ${
+            activeMenuItem === menuItem.url ? "active" : ""
+          }`}
+          onClick={() => handleMenuItemClick(menuItem.url)}
+          aria-current={activeMenuItem === menuItem.url ? "true" : "false"}
         >
-          <i className={`${menuItems.icon}`}></i>
-          {menuItems.name}
+          <i className={`${menuItem.icon} fa-fw pe-2`}></i> {menuItem.name}
         </Link>
       ))}
     </div>

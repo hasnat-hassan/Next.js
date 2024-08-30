@@ -20,7 +20,6 @@ const Home = ({ data }: Props) => {
   const location = searchParams.get("location");
 
   const { rooms, resPerPage, filteredRoomsCount } = data;
- 
   return (
     <div>
       <section id="rooms" className="container mt-5">

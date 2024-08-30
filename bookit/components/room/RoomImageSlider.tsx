@@ -18,8 +18,7 @@ const RoomImageSlider = ({ images }: Props) => {
                 className="d-block m-auto"
                 src={image?.url}
                 alt={image?.url}
-                // layout="fill"
-                fill={true}
+                layout="fill"
               />
             </div>
           </Carousel.Item>

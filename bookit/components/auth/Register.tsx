@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 
 const Register = () => {
@@ -26,14 +26,12 @@ const Register = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const errorMessage = (error.data as { message?: string })?.message;
-      if (errorMessage) {
-        toast.error(errorMessage);
-      }
+      toast.error(error?.data?.errMessage);
     }
+
     if (isSuccess) {
       router.push("/login");
-      toast.success("Registration Successful! Please Login");
+      toast.success("Account Registered. You can login now");
     }
   }, [error, isSuccess]);
 
@@ -45,6 +43,7 @@ const Register = () => {
       email,
       password,
     };
+
     register(userData);
   };
 
@@ -59,7 +58,7 @@ const Register = () => {
           <h2 className="mb-4">Join Us</h2>
 
           <div className="mb-3">
-            <label htmlFor="name_field" className="htmlForm-label">
+            <label htmlFor="name_field" className="form-label">
               {" "}
               Full Name{" "}
             </label>

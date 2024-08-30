@@ -1,5 +1,5 @@
 import { IUser } from "@/backend/models/user";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 import { NextRequest } from "next/server";
 
 declare module "next/server" {
@@ -8,7 +8,7 @@ declare module "next/server" {
   }
 }
 
-declare module "reduxjs/toolkit/query" {
+declare module "@reduxjs/toolkit/query/react" {
   interface FetchBaseQueryError {
     data?: any;
   }
