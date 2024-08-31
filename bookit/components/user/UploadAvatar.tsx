@@ -35,7 +35,10 @@ const UploadAvatar = () => {
     }
 
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const errorMessage = (error.data as { message?: string })?.message;
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
     }
 
     if (isSuccess) {

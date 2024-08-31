@@ -3,6 +3,9 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import User from "../models/user";
 import ErrorHandler from "../utils/errorHandler";
 import { delete_file, upload_file } from "../utils/cloudinary";
+import { resetPasswordHTMLTemplate } from "../utils/emailTemplates";
+import sendEmail from "../utils/sendEmail";
+import crypto from "crypto";
 
 // Register user  =>  /api/auth/register
 export const registerUser = catchAsyncErrors(async (req: NextRequest) => {
@@ -38,26 +41,6 @@ export const updateProfile = catchAsyncErrors(async (req: NextRequest) => {
   });
 });
 
-// Update password  =>  /api/me/update_password
-export const updatePassword = catchAsyncErrors(async (req: NextRequest) => {
-  const body = await req.json();
-
-  const user = await User.findById(req?.user?._id).select("+password");
-
-  const isMatched = await user.comparePassword(body.oldPassword);
-
-  if (!isMatched) {
-    throw new ErrorHandler("Old password is incorrect", 400);
-  }
-
-  user.password = body.password;
-  await user.save();
-
-  return NextResponse.json({
-    success: true,
-  });
-});
-
 // Upload user avatar  =>  /api/me/upload_avatar
 export const uploadAvatar = catchAsyncErrors(async (req: NextRequest) => {
   const body = await req.json();
@@ -78,3 +61,108 @@ export const uploadAvatar = catchAsyncErrors(async (req: NextRequest) => {
     user,
   });
 });
+
+// Update password  =>  /api/me/update_password
+export const updatePassword = catchAsyncErrors(async (req: NextRequest) => {
+  const body = await req.json();
+
+  const user = await User.findById(req?.user?._id).select("+password");
+
+  const isMatched = await user.comparePassword(body.oldPassword);
+
+  if (!isMatched) {
+    throw new ErrorHandler("Old password is incorrect", 400);
+  }
+
+  user.password = body.password;
+  await user.save();
+
+  return NextResponse.json({
+    success: true,
+  });
+});
+
+// forgot password  =>  /api/me/forgot
+export const forgotPassword = catchAsyncErrors(async (req: NextRequest) => {
+  const body = await req.json();
+
+  // Find user by email
+  const user = await User.findOne({ email: body.email });
+
+  if (!user) {
+    throw new ErrorHandler("User not found with this email", 404);
+  }
+
+  // Generate reset password token
+  const resetToken = user.getResetPasswordToken();
+
+  await user.save();
+
+  // Create reset password URL
+  const resetUrl = `${process.env.API_URL}/password/reset/${resetToken}`;
+
+  const message = resetPasswordHTMLTemplate(user?.name, resetUrl);
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "BookIT Password Recovery",
+      message,
+    });
+  } catch (error: any) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    throw new ErrorHandler(error?.message, 500);
+  }
+
+  return NextResponse.json({
+    success: true,
+    user,
+  });
+});
+
+// Reset password  =>  /api/me/reset/:token
+export const resetPassword = catchAsyncErrors(
+  async (req: NextRequest, { params }: { params: { token: string } }) => {
+    const body = await req.json();
+
+    // Hash the token
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(params.token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      throw new ErrorHandler(
+        "Password reset token is invalid or has been expired",
+        404
+      );
+    }
+
+    if (body.password !== body.confirmPassword) {
+      throw new ErrorHandler(
+        "Password reset token is invalid or has been expired",
+        400
+      );
+    }
+    // Set the new Password
+    user.password = body.password;
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    return NextResponse.json({
+      success: true,
+    });
+  }
+);
