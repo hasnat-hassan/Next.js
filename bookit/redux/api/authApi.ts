@@ -1,4 +1,3 @@
-import { forgotPassword } from "@/backend/controllers/authControllers";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
@@ -23,7 +22,20 @@ export const authApi = createApi({
         };
       },
     }),
+    resetPassword: builder.mutation({
+      query({ token, body }) {
+        return {
+          url: `/password/reset/${token}`,
+          method: "PUT",
+          body,
+        };
+      },
+    }),
   }),
 });
 
-export const { useRegisterMutation, useForgotPasswordMutation } = authApi;
+export const {
+  useRegisterMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+} = authApi;

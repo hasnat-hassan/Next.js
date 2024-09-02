@@ -14,7 +14,6 @@ export default async (options: EmailOptions) => {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASSWORD,
     },
-    connectionTimeout: 1000000,
   });
 
   const message = {
@@ -23,5 +22,6 @@ export default async (options: EmailOptions) => {
     subject: options.subject,
     html: options.message,
   };
+
   await transport.sendMail(message);
 };

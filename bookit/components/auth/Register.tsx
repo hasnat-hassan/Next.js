@@ -26,10 +26,7 @@ const Register = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const errorMessage = (error.data as { message?: string })?.message;
-      if (errorMessage) {
-        toast.error(errorMessage);
-      }
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {

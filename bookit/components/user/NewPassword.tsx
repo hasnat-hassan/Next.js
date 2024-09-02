@@ -1,69 +1,77 @@
 "use client";
 
-import { useUpdatePasswordMutation } from "@/redux/api/userApi";
+import { useResetPasswordMutation } from "@/redux/api/authApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 
-const UpdatePassword = () => {
+interface Props {
+  token: string;
+}
+
+const NewPassword = ({ token }: Props) => {
   const [password, setPassword] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const router = useRouter();
 
-  const [updatePassword, { isLoading, error, isSuccess }] =
-    useUpdatePasswordMutation();
+  const [resetPassword, { error, isLoading, isSuccess }] =
+    useResetPasswordMutation();
 
   useEffect(() => {
+    console.log(error);
+
     if (error && "data" in error) {
       toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {
-      toast.success("Password updated");
-      router.refresh();
+      toast.success("Password reset was successful");
+      router.push("/login");
     }
   }, [error, isSuccess]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const passwords = { password, oldPassword };
+    const passwords = { password, confirmPassword };
 
-    updatePassword(passwords);
+    resetPassword({ token, body: passwords });
   };
 
   return (
     <div className="row wrapper">
-      <div className="col-10 col-lg-8">
+      <div className="col-10 col-lg-5">
         <form className="shadow rounded bg-body" onSubmit={submitHandler}>
-          <h2 className="mb-4">Change Password</h2>
+          <h2 className="mb-4">New Password</h2>
 
           <div className="mb-3">
-            <label className="form-label" htmlFor="old_password_field">
-              Old Password
+            <label htmlFor="password_field" className="form-label">
+              {" "}
+              Password{" "}
             </label>
             <input
               type="password"
-              id="old_password_field"
-              className="form-control"
-              name="oldPassword"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label" htmlFor="new_password_field">
-              New Password
-            </label>
-            <input
-              type="password"
-              id="new_password_field"
+              id="password_field"
               className="form-control"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="confirm_password_field" className="form-label">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirm_password_field"
+              className="form-control"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
 
@@ -80,4 +88,4 @@ const UpdatePassword = () => {
   );
 };
 
-export default UpdatePassword;
+export default NewPassword;

@@ -1,28 +1,23 @@
 "use client";
 
 import { useForgotPasswordMutation } from "@/redux/api/authApi";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 
 const ForgotPassword = () => {
-  const [email, setMail] = useState("");
-  const router = useRouter();
+  const [email, setEmail] = useState("");
 
   const [forgotPassword, { isLoading, error, isSuccess }] =
     useForgotPasswordMutation();
 
   useEffect(() => {
     if (error && "data" in error) {
-      const errorMessage = (error.data as { message?: string })?.message;
-      if (errorMessage) {
-        toast.error(errorMessage);
-      }
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {
-      toast.success("Email sent successfully");
+      toast.success("Email Sent Successfully");
     }
   }, [error, isSuccess]);
 
@@ -50,7 +45,7 @@ const ForgotPassword = () => {
               className="form-control"
               name="email"
               value={email}
-              onChange={(e) => setMail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
