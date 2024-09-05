@@ -1,6 +1,5 @@
 import Home from "@/components/Home";
 import Error from "./error";
-import { url } from "inspector";
 
 export const metadata = {
   title: "HomePage - BookIT",

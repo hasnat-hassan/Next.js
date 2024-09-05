@@ -8,6 +8,9 @@ import RoomFeatures from "./RoomFeatures";
 import BookingDatePicker from "./BookingDatePicker";
 import ListReviews from "../review/ListReviews";
 import NewReview from "../review/NewReview";
+// import RoomMap from "./RoomMap";
+import dynamic from "next/dynamic";
+const RoomMap = dynamic(() => import("./RoomMap"), { ssr: false });
 
 interface Props {
   data: {
@@ -46,7 +49,7 @@ const RoomDetails = ({ data }: Props) => {
 
         <div className="col-12 col-md-6 col-lg-4">
           <BookingDatePicker room={room} />
-          // Room Map - TODO
+          <RoomMap room={room} />
         </div>
       </div>
 
