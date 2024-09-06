@@ -1,5 +1,5 @@
 import dbConnect from "@/backend/config/dbConnect";
-import { getBookingDetails } from "@/backend/controllers/bookingControllers";
+import { getBookingDetails } from "@/backend/controllers/bookingController";
 import { isAuthenticatedUser } from "@/backend/middlewares/auth";
 import { createEdgeRouter } from "next-connect";
 import { NextRequest } from "next/server";

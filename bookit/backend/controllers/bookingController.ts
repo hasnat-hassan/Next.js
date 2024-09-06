@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
-import Booking, { IBooking } from "../models/booking";
+import Bookings, { IBooking } from "../models/bookings";
 import Moment from "moment";
 import { extendMoment } from "moment-range";
 import ErrorHandler from "../utils/errorHandler";
 
 const moment = extendMoment(Moment);
 
-// Create new Booking   =>  /api/bookings
 export const newBooking = catchAsyncErrors(async (req: NextRequest) => {
   const body = await req.json();
 
@@ -20,7 +19,7 @@ export const newBooking = catchAsyncErrors(async (req: NextRequest) => {
     paymentInfo,
   } = body;
 
-  const booking = await Booking.create({
+  const booking = await Bookings.create({
     room,
     user: req.user._id,
     checkInDate,
@@ -36,8 +35,8 @@ export const newBooking = catchAsyncErrors(async (req: NextRequest) => {
   });
 });
 
-// Check Room Booking Availability   =>  /api/bookings/check
-export const checkRoomBookingAvailability = catchAsyncErrors(
+// Check Room Booking Availability
+export const checkRoomBookingAvailablity = catchAsyncErrors(
   async (req: NextRequest) => {
     const { searchParams } = new URL(req.url);
     const roomId = searchParams.get("roomId");
@@ -49,28 +48,28 @@ export const checkRoomBookingAvailability = catchAsyncErrors(
       searchParams.get("checkOutDate") as string
     );
 
-    const bookings: IBooking[] = await Booking.find({
+    const bookings: IBooking[] = await Bookings.find({
       room: roomId,
       $and: [
-        { checkInDate: { $lte: checkOutDate } },
-        { checkOutDate: { $gte: checkInDate } },
+        {
+          checkInDate: { $lt: checkOutDate }, // Existing booking starts before the desired check-out date
+          checkOutDate: { $gt: checkInDate }, // Existing booking ends after the desired check-in date
+        },
       ],
     });
-
     const isAvailable: boolean = bookings.length === 0;
-
     return NextResponse.json({
       isAvailable,
     });
   }
 );
 
-// Get room booked dates   =>  /api/bookings/get_booked_dates
+//get Room Booked Date => /api/bookings/get_booked_dates
 export const getRoomBookedDates = catchAsyncErrors(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const roomId = searchParams.get("roomId");
 
-  const bookings = await Booking.find({ room: roomId });
+  const bookings = await Bookings.find({ room: roomId });
 
   const bookedDates = bookings.flatMap((booking) =>
     Array.from(
@@ -80,25 +79,20 @@ export const getRoomBookedDates = catchAsyncErrors(async (req: NextRequest) => {
     )
   );
 
-  return NextResponse.json({
-    bookedDates,
-  });
+  return NextResponse.json({ bookedDates });
 });
 
-// Get current user bookings   =>  /api/bookings/me
+// GET Current user booking => /api/bookings/me
 export const myBookings = catchAsyncErrors(async (req: NextRequest) => {
-  const bookings = await Booking.find({ user: req.user._id });
+  const bookings = await Bookings.find({ user: req.user._id });
 
-  return NextResponse.json({
-    bookings,
-  });
+  return NextResponse.json({ bookings });
 });
 
-// Get booking details   =>  /api/bookings/:id
+// GET booking details => /api/bookings/:id
 export const getBookingDetails = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
-    const booking = await Booking.findById(params.id).populate("user room");
-
+    const booking = await Bookings.findById(params.id).populate("user room");
     if (booking.user?._id?.toString() !== req.user._id) {
       throw new ErrorHandler("You can not view this booking", 403);
     }

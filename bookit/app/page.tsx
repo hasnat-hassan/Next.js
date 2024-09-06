@@ -10,9 +10,6 @@ const getRooms = async (searchParams: string) => {
   const queryString = urlParams.toString();
 
   const res = await fetch(`${process.env.API_URL}/api/rooms?${queryString}`, {
-    headers: {
-      Connection: "keep-alive",
-    },
     cache: "no-cache",
   });
   return res.json();

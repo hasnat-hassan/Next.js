@@ -1,9 +1,9 @@
 import Error from "@/app/error";
-import MyBookings from "@/components/booking/MyBookings";
+import MyBookings from "@/components/booking/MyBooking";
 import { getAuthHeader } from "@/helpers/authHeader";
 
 export const metadata = {
-  title: "My Bookings",
+  title: "My Bookings ",
 };
 
 const getBookings = async () => {

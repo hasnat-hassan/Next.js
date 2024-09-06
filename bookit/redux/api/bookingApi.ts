@@ -1,4 +1,3 @@
-import { getBookedDates } from "@/backend/controllers/bookingControllers";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const bookingApi = createApi({
@@ -28,6 +27,19 @@ export const bookingApi = createApi({
         };
       },
     }),
+    stripeCheckout: builder.query({
+      query({ id, checkoutData }) {
+        return {
+          url: `/payment/checkout_session/${id}`,
+          params: {
+            checkInDate: checkoutData.checkInDate,
+            checkOutDate: checkoutData.checkOutDate,
+            daysOfStay: checkoutData.daysOfStay,
+            amount: checkoutData.amount,
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -35,4 +47,5 @@ export const {
   useNewBookingMutation,
   useLazyCheckBookingAvailabilityQuery,
   useGetBookedDatesQuery,
+  useLazyStripeCheckoutQuery,
 } = bookingApi;

@@ -3,7 +3,7 @@ import BookingDetails from "@/components/booking/BookingDetails";
 import { getAuthHeader } from "@/helpers/authHeader";
 
 export const metadata = {
-  title: "My Booking Details",
+  title: "My Bookings Details",
 };
 
 const getBooking = async (id: string) => {

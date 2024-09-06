@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { IRoom } from "@/backend/models/room";
 import React from "react";
 import StarRatings from "react-star-ratings";
@@ -9,7 +10,6 @@ import BookingDatePicker from "./BookingDatePicker";
 import ListReviews from "../review/ListReviews";
 import NewReview from "../review/NewReview";
 // import RoomMap from "./RoomMap";
-import dynamic from "next/dynamic";
 const RoomMap = dynamic(() => import("./RoomMap"), { ssr: false });
 
 interface Props {
@@ -53,8 +53,8 @@ const RoomDetails = ({ data }: Props) => {
         </div>
       </div>
 
-      <NewReview />
-      <ListReviews />
+      <NewReview roomId={room?._id} />
+      <ListReviews reviews={room?.reviews} />
     </div>
   );
 };

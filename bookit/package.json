@@ -37,6 +37,7 @@
     "react-leaflet": "^4.2.1",
     "react-redux": "^8.1.2",
     "react-star-ratings": "^2.3.0",
+    "stripe": "^16.9.0",
     "typescript": "5.2.2"
   },
   "devDependencies": {

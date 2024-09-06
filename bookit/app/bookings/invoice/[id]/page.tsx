@@ -1,4 +1,5 @@
 import Error from "@/app/error";
+import BookingDetails from "@/components/booking/BookingDetails";
 import Invoice from "@/components/invoice/Invoice";
 import { getAuthHeader } from "@/helpers/authHeader";
 
@@ -20,7 +21,7 @@ export default async function MyBookingsPage({
 }: {
   params: { id: string };
 }) {
-  const data = await getBooking(params?.id);
+  const data = await getBooking(params.id);
 
   if (data?.errMessage) {
     return <Error error={data} />;

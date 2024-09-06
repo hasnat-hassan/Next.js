@@ -1,6 +1,5 @@
 import dbConnect from "@/backend/config/dbConnect";
-import { newBooking } from "@/backend/controllers/bookingController";
-import { isAuthenticatedUser } from "@/backend/middlewares/auth";
+import { webhookCheckout } from "@/backend/controllers/paymentcontrollers";
 import { createEdgeRouter } from "next-connect";
 import { NextRequest } from "next/server";
 
@@ -10,7 +9,7 @@ const router = createEdgeRouter<NextRequest, RequestContext>();
 
 dbConnect();
 
-router.use(isAuthenticatedUser).post(newBooking);
+router.post(webhookCheckout);
 
 export async function POST(request: NextRequest, ctx: RequestContext) {
   return router.run(request, ctx);

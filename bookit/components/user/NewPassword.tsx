@@ -20,6 +20,8 @@ const NewPassword = ({ token }: Props) => {
     useResetPasswordMutation();
 
   useEffect(() => {
+    console.log(error);
+
     if (error && "data" in error) {
       toast.error(error?.data?.errMessage);
     }

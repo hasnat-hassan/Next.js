@@ -1,8 +1,6 @@
 "use client";
-
-import { IBooking } from "@/backend/models/booking";
-import React from "react";
-import "@/components/invoice/Invoice.css";
+import { IBooking } from "@/backend/models/bookings";
+import "./Invoice.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
@@ -15,16 +13,28 @@ interface Props {
 const Invoice = ({ data }: Props) => {
   const booking = data?.booking;
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const input = document.getElementById("booking_invoice");
     if (input) {
-      html2canvas(input).then((canvas) => {
+      try {
+        // Wait for the DOM to stabilize
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const canvas = await html2canvas(input);
         const imgData = canvas.toDataURL("image/png");
+
         const pdf = new jsPDF();
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        pdf.addImage(imgData, 0, 0, pdfWidth, 0);
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = imgWidth / imgHeight;
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfWidth / ratio);
         pdf.save(`invoice_${booking?._id}.pdf`);
-      });
+      } catch (error) {
+        console.error("Failed to generate PDF", error);
+      }
     }
   };
 
@@ -40,7 +50,7 @@ const Invoice = ({ data }: Props) => {
           <div id="booking_invoice" className="px-4 border border-secondary">
             <header className="clearfix">
               <div id="logo" className="my-4">
-                <img src="/images/bookit_logo.png" />
+                <img src="/images/bookit_logo.png" alt="BookIT Logo" />
               </div>
               <h1>INVOICE # {booking?._id}</h1>
               <div id="company" className="clearfix">
@@ -63,12 +73,12 @@ const Invoice = ({ data }: Props) => {
                   <span>EMAIL</span> {booking?.user?.email}
                 </div>
                 <div>
-                  <span>DATE</span>{" "}
+                  <span>DATE</span>
                   {new Date(booking?.createdAt).toLocaleString("en-US")}
                 </div>
                 <div>
                   <span>Status</span>{" "}
-                  {booking?.paymentInfo?.status?.toUpperCase()}
+                  {booking?.paymentInfo?.status.toUpperCase()}
                 </div>
               </div>
             </header>
@@ -88,11 +98,9 @@ const Invoice = ({ data }: Props) => {
                     <td className="service">{booking?.room?.name}</td>
                     <td className="desc">${booking?.room?.pricePerNight}</td>
                     <td className="unit">
-                      {" "}
                       {new Date(booking?.checkInDate).toLocaleString("en-US")}
                     </td>
                     <td className="qty">
-                      {" "}
                       {new Date(booking?.checkOutDate).toLocaleString("en-US")}
                     </td>
                     <td className="qty">{booking?.daysOfStay}</td>
@@ -101,7 +109,7 @@ const Invoice = ({ data }: Props) => {
                     <td colSpan={4} className="grand total">
                       <b>GRAND TOTAL</b>
                     </td>
-                    <td className="grand total">${booking.amountPaid}</td>
+                    <td className="grand total">${booking?.amountPaid}</td>
                   </tr>
                 </tbody>
               </table>
