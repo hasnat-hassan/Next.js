@@ -1,5 +1,5 @@
 import dbConnect from "@/backend/config/dbConnect";
-import { webhookCheckout } from "@/backend/controllers/paymentcontrollers";
+import { webhookCheckout } from "@/backend/controllers/paymentControllers";
 import { createEdgeRouter } from "next-connect";
 import { NextRequest } from "next/server";
 

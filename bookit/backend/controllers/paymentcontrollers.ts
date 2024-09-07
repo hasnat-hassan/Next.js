@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors";
 import Room from "../models/room";
 import User from "../models/user";
-import Bookings from "../models/bookings";
+import { headers } from "next/headers";
+import Booking from "../models/booking";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-// Generate Stripe checkout session => /api/payment/checkout_session/:roomId
-
+// Genereate stripe checkout session  =>  /api/payment/checkout_session/:roomId
 export const stripeCheckoutSession = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const { searchParams } = new URL(req.url);
@@ -17,11 +17,10 @@ export const stripeCheckoutSession = catchAsyncErrors(
     const daysOfStay = searchParams.get("daysOfStay");
     const roomAmount = searchParams.get("amount");
 
-    // Get Room details
+    // Get room details
     const room = await Room.findById(params.id);
 
     // Create stripe checkout session
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       success_url: `${process.env.API_URL}/bookings/me`,
@@ -50,13 +49,11 @@ export const stripeCheckoutSession = catchAsyncErrors(
   }
 );
 
-// CREATE NEW BOOKING AFTER PAYMENT => /api/payment/webhook
-
+// Create new booking after payment  =>  /api/payment/webhook
 export const webhookCheckout = async (req: NextRequest) => {
   try {
     const rawBody = await req.text();
-
-    const signature = req.headers.get("stripe-signature");
+    const signature = headers().get("Stripe-Signature");
 
     const event = stripe.webhooks.constructEvent(
       rawBody,
@@ -71,15 +68,17 @@ export const webhookCheckout = async (req: NextRequest) => {
       const user = (await User.findOne({ email: session?.customer_email })).id;
 
       const amountPaid = session?.amount_total / 100;
+
       const paymentInfo = {
         id: session.payment_intent,
         status: session.payment_status,
       };
+
       const checkInDate = session.metadata.checkInDate;
       const checkOutDate = session.metadata.checkOutDate;
       const daysOfStay = session.metadata.daysOfStay;
 
-      await Bookings.create({
+      await Booking.create({
         room,
         user,
         checkInDate,
@@ -93,10 +92,7 @@ export const webhookCheckout = async (req: NextRequest) => {
       return NextResponse.json({ success: true });
     }
   } catch (error: any) {
-    console.log("Error in stripe checkout webhook", error);
-
-    return NextResponse.json({
-      errMessage: error?.message,
-    });
+    console.log("Eror in stripe checkout webhook => ", error);
+    return NextResponse.json({ errMessage: error?.message });
   }
 };

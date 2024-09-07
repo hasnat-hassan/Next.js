@@ -1,5 +1,8 @@
 "use client";
-import { IBooking } from "@/backend/models/bookings";
+
+import { IBooking } from "@/backend/models/booking";
+import React from "react";
+
 import "./Invoice.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -13,28 +16,17 @@ interface Props {
 const Invoice = ({ data }: Props) => {
   const booking = data?.booking;
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     const input = document.getElementById("booking_invoice");
     if (input) {
-      try {
-        // Wait for the DOM to stabilize
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const canvas = await html2canvas(input);
+      html2canvas(input).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
 
         const pdf = new jsPDF();
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
-        const ratio = imgWidth / imgHeight;
-
-        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfWidth / ratio);
+        pdf.addImage(imgData, 0, 0, pdfWidth, 0);
         pdf.save(`invoice_${booking?._id}.pdf`);
-      } catch (error) {
-        console.error("Failed to generate PDF", error);
-      }
+      });
     }
   };
 
@@ -50,7 +42,7 @@ const Invoice = ({ data }: Props) => {
           <div id="booking_invoice" className="px-4 border border-secondary">
             <header className="clearfix">
               <div id="logo" className="my-4">
-                <img src="/images/bookit_logo.png" alt="BookIT Logo" />
+                <img src="/images/bookit_logo.png" />
               </div>
               <h1>INVOICE # {booking?._id}</h1>
               <div id="company" className="clearfix">
@@ -73,12 +65,12 @@ const Invoice = ({ data }: Props) => {
                   <span>EMAIL</span> {booking?.user?.email}
                 </div>
                 <div>
-                  <span>DATE</span>
+                  <span>DATE</span>{" "}
                   {new Date(booking?.createdAt).toLocaleString("en-US")}
                 </div>
                 <div>
                   <span>Status</span>{" "}
-                  {booking?.paymentInfo?.status.toUpperCase()}
+                  {booking?.paymentInfo?.status?.toUpperCase()}
                 </div>
               </div>
             </header>

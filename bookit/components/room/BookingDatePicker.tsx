@@ -8,12 +8,13 @@ import {
   useLazyStripeCheckoutQuery,
   useNewBookingMutation,
 } from "@/redux/api/bookingApi";
-import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import ButtonLoader from "../layout/ButtonLoader";
 import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-hot-toast";
 
 interface Props {
   room: IRoom;
@@ -26,11 +27,13 @@ const BookingDatePicker = ({ room }: Props) => {
 
   const router = useRouter();
 
-  const [newBooking] = useNewBookingMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  const [newBooking] = useNewBookingMutation();
 
   const [checkBookingAvailability, { data }] =
     useLazyCheckBookingAvailabilityQuery();
+
   const isAvailable = data?.isAvailable;
 
   const { data: { bookedDates: dates } = {} } = useGetBookedDatesQuery(
@@ -38,7 +41,7 @@ const BookingDatePicker = ({ room }: Props) => {
   );
   const excludeDates = dates?.map((date: string) => new Date(date)) || [];
 
-  const onChange = (dates: any) => {
+  const onChange = (dates: Date[]) => {
     const [checkInDate, checkOutDate] = dates;
 
     setCheckInDate(checkInDate);
@@ -47,12 +50,14 @@ const BookingDatePicker = ({ room }: Props) => {
     if (checkInDate && checkOutDate) {
       const days = calculateDaysOfStay(checkInDate, checkOutDate);
 
+      setDaysOfStay(days);
+
+      // check booking availability
       checkBookingAvailability({
         id: room._id,
         checkInDate: checkInDate.toISOString(),
         checkOutDate: checkOutDate.toISOString(),
       });
-      setDaysOfStay(days);
     }
   };
 
@@ -61,11 +66,11 @@ const BookingDatePicker = ({ room }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      // toast.error(error?.data.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (checkoutData) {
-      router.replace(checkoutData.url);
+      router.replace(checkoutData?.url);
     }
   }, [error, checkoutData]);
 
@@ -98,15 +103,17 @@ const BookingDatePicker = ({ room }: Props) => {
   // };
 
   return (
-    <div className="booking-card shadow p-4 mb-5">
+    <div className="booking-card shadow p-4">
       <p className="price-per-night">
-        <b>${room.pricePerNight}</b> / Night
+        <b>${room?.pricePerNight}</b> / night
       </p>
+
       <hr />
-      <p className="mt5 mb-3">Pick Check & Check out Date</p>
+
+      <p className="mt5 mb-3">Pick Check In & Check Out Date</p>
 
       <DatePicker
-        className="w-100`"
+        className="w-100"
         selected={checkInDate}
         onChange={onChange}
         startDate={checkInDate}
@@ -119,16 +126,17 @@ const BookingDatePicker = ({ room }: Props) => {
 
       {isAvailable === true && (
         <div className="alert alert-success my-3">
-          Room is avalable.Book now.
+          Room is available. Book now.
         </div>
       )}
       {isAvailable === false && (
         <div className="alert alert-danger my-3">
-          Sorry! Room is not available. Try different Dates
+          Room not available. Try different dates.
         </div>
       )}
+
       {isAvailable && !isAuthenticated && (
-        <div className="alert alert-danger my-3">Login First to book room</div>
+        <div className="alert alert-danger my-3">Login to book room.</div>
       )}
 
       {isAvailable && isAuthenticated && (
@@ -137,11 +145,7 @@ const BookingDatePicker = ({ room }: Props) => {
           onClick={bookRoom}
           disabled={isLoading}
         >
-          {isLoading ? (
-            <ButtonLoader />
-          ) : (
-            `Pay -  $${daysOfStay * room?.pricePerNight}`
-          )}
+          Pay - ${daysOfStay * room?.pricePerNight}
         </button>
       )}
     </div>

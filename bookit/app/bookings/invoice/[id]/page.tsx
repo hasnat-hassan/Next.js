@@ -1,5 +1,4 @@
 import Error from "@/app/error";
-import BookingDetails from "@/components/booking/BookingDetails";
 import Invoice from "@/components/invoice/Invoice";
 import { getAuthHeader } from "@/helpers/authHeader";
 
@@ -9,6 +8,7 @@ export const metadata = {
 
 const getBooking = async (id: string) => {
   const authHeader = getAuthHeader();
+
   const res = await fetch(
     `${process.env.API_URL}/api/bookings/${id}`,
     authHeader
@@ -21,7 +21,7 @@ export default async function MyBookingsPage({
 }: {
   params: { id: string };
 }) {
-  const data = await getBooking(params.id);
+  const data = await getBooking(params?.id);
 
   if (data?.errMessage) {
     return <Error error={data} />;

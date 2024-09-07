@@ -1,22 +1,28 @@
-import { usePostReviewMutation } from "@/redux/api/roomApi";
+import {
+  useCanUserReviewQuery,
+  usePostReviewMutation,
+} from "@/redux/api/roomApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import StarRatings from "react-star-ratings";
 
 const NewReview = ({ roomId }: { roomId: string }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+
   const router = useRouter();
 
+  const { data: { canReview } = {} } = useCanUserReviewQuery(roomId);
   const [postReview, { error, isSuccess }] = usePostReviewMutation();
 
   useEffect(() => {
     if (error && "data" in error) {
       toast.error(error?.data?.errMessage);
     }
+
     if (isSuccess) {
-      toast.success("Review Posted");
+      toast.success("Review posted");
       router.refresh();
     }
   }, [error, isSuccess]);
@@ -33,14 +39,16 @@ const NewReview = ({ roomId }: { roomId: string }) => {
 
   return (
     <>
-      <button
-        type="button"
-        className="btn form-btn mt-4 mb-5"
-        data-bs-toggle="modal"
-        data-bs-target="#ratingModal"
-      >
-        Submit Your Review
-      </button>
+      {canReview && (
+        <button
+          type="button"
+          className="btn form-btn mt-4 mb-5"
+          data-bs-toggle="modal"
+          data-bs-target="#ratingModal"
+        >
+          Submit Your Review
+        </button>
+      )}
       <div
         className="modal fade"
         id="ratingModal"
@@ -70,6 +78,7 @@ const NewReview = ({ roomId }: { roomId: string }) => {
                 name="rating"
                 changeRating={(e: any) => setRating(e)}
               />
+
               <div className="form-floating">
                 <textarea
                   id="review_field"

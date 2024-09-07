@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
 export interface IUser extends Document {
-  comment: ReactNode;
   name: string;
   email: string;
   password: string;
