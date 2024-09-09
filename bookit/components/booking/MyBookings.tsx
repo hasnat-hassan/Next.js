@@ -11,7 +11,7 @@ interface Props {
   };
 }
 
-const MyBookings = ({ data }: Props) => {
+const MyBookings = ({ data = { bookings: [] } }: Props) => {
   const bookings = data?.bookings;
 
   const setBookings = () => {

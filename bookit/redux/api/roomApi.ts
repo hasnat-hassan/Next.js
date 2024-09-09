@@ -20,7 +20,40 @@ export const roomApi = createApi({
         };
       },
     }),
+    newRoom: builder.mutation({
+      query(body) {
+        return {
+          url: "/admin/rooms",
+          method: "POST",
+          body,
+        };
+      },
+    }),
+    updateRoom: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/admin/rooms/${id}`,
+          method: "PUT",
+          body,
+        };
+      },
+    }),
+    uploadRoomImages: builder.mutation({
+      query({ id, body }) {
+        return {
+          url: `/admin/rooms/${id}/upload_images`,
+          method: "PUT",
+          body,
+        };
+      },
+    }),
   }),
 });
 
-export const { usePostReviewMutation, useCanUserReviewQuery } = roomApi;
+export const {
+  usePostReviewMutation,
+  useCanUserReviewQuery,
+  useNewRoomMutation,
+  useUpdateRoomMutation,
+  useUploadRoomImagesMutation,
+} = roomApi;
