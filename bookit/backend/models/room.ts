@@ -156,7 +156,7 @@ const roomSchema: Schema<IRoom> = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false,
   },
   createdAt: {
     type: Date,
@@ -166,17 +166,31 @@ const roomSchema: Schema<IRoom> = new Schema({
 
 // Setting up location
 roomSchema.pre("save", async function (next) {
-  const loc = await geoCoder.geocode(this.address);
-
-  this.location = {
-    type: "Point",
-    coordinates: [loc[0].longitude, loc[0].latitude],
-    formattedAddress: loc[0].formattedAddress,
-    city: loc[0].city,
-    state: loc[0].stateCode,
-    zipCode: loc[0].zipcode,
-    country: loc[0].countryCode,
-  };
+  if (this.isModified("address")) {
+    try {
+      const res = await geoCoder.geocode(this.address);
+      if (res && res.length > 0) {
+        const locationData = res[0];
+        this.location = {
+          type: "Point",
+          coordinates: [
+            parseFloat(locationData.longitude),
+            parseFloat(locationData.latitude),
+          ],
+          formattedAddress: locationData.formattedAddress,
+          city: locationData.city,
+          state: locationData.stateCode,
+          zipCode: locationData.zipcode,
+          country: locationData.countryCode,
+        };
+      } else {
+        throw new Error("Location not found");
+      }
+    } catch (error) {
+      return console.error(error);
+    }
+  }
+  next();
 });
 
 export default mongoose.models.Room ||

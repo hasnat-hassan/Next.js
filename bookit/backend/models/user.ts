@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-import * as crypto from "crypto"; // Use named import for crypto
-
+import * as crypto from "crypto";
 export interface IUser extends Document {
   name: string;
   email: string;
