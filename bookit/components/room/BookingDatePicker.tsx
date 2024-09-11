@@ -2,6 +2,7 @@
 
 import { IRoom } from "@/backend/models/room";
 import { calculateDaysOfStay } from "@/helpers/helpers";
+import { CustomError } from "@/interface/customError";
 import {
   useGetBookedDatesQuery,
   useLazyCheckBookingAvailabilityQuery,
@@ -66,7 +67,8 @@ const BookingDatePicker = ({ room }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (checkoutData) {

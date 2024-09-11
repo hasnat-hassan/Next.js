@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import StarRatings from "react-star-ratings";
+import { CustomError } from "@/interface/customError";
 
 const NewReview = ({ roomId }: { roomId: string }) => {
   const [rating, setRating] = useState(0);
@@ -19,7 +20,8 @@ const NewReview = ({ roomId }: { roomId: string }) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (isSuccess) {

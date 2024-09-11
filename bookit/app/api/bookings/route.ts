@@ -2,7 +2,7 @@ import dbConnect from "@/backend/config/dbConnect";
 import { newBooking } from "@/backend/controllers/bookingControllers";
 import { isAuthenticatedUser } from "@/backend/middlewares/auth";
 import { createEdgeRouter } from "next-connect";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 interface RequestContext {}
 
@@ -13,5 +13,5 @@ dbConnect();
 router.use(isAuthenticatedUser).post(newBooking);
 
 export async function POST(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return router.run(request, ctx) as Promise<NextResponse>;
 }

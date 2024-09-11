@@ -4,6 +4,7 @@ import { useForgotPasswordMutation } from "@/redux/api/authApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
+import { CustomError } from "@/interface/customError";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,8 @@ const ForgotPassword = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (isSuccess) {

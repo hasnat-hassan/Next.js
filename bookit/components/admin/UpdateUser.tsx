@@ -4,8 +4,8 @@ import { useUpdateUserMutation } from "@/redux/api/userApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ButtonLoader from "../layout/ButtonLoader";
+import { CustomError } from "@/interface/customError";
 import toast from "react-hot-toast";
-import { revalidateTag } from "next/cache";
 
 interface Props {
   data: {
@@ -33,7 +33,8 @@ const UpdateUser = ({ data }: Props) => {
   };
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (isSuccess) {

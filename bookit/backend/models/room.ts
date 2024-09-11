@@ -8,6 +8,7 @@ export interface IImage extends Document {
 }
 
 export interface IReview extends Document {
+  _id: string;
   user: IUser;
   rating: number;
   comment: string;
@@ -24,6 +25,7 @@ export interface ILocation {
 }
 
 export interface IRoom extends Document {
+  _id: string;
   name: string;
   description: string;
   pricePerNight: number;
