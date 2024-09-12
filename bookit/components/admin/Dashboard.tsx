@@ -7,8 +7,7 @@ import SalesStats from "./SalesStats";
 import { SalesChart } from "../charts/SalesCharts";
 import { TopPerformingChart } from "../charts/TopPerformingChart";
 import { useLazyGetSalesStatsQuery } from "@/redux/api/bookingApi";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Loading from "@/app/admin/loading";
 
 const Dashboard = () => {
@@ -20,8 +19,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (startDate && endDate && !data) {
@@ -38,8 +36,6 @@ const Dashboard = () => {
       endDate: endDate.toISOString(),
     });
   };
-
-  console.log(data);
 
   if (!data) return <Loading />;
 

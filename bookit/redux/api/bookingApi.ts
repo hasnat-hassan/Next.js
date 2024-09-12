@@ -40,6 +40,7 @@ export const bookingApi = createApi({
         };
       },
     }),
+
     getSalesStats: builder.query({
       query({ startDate, endDate }) {
         return {

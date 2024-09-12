@@ -85,7 +85,7 @@ export const updateRoom = catchAsyncErrors(
   }
 );
 
-// Update room images  =>  /api/admin/rooms/:id/ypload_images
+// Upload room images  =>  /api/admin/rooms/:id/upload_images
 export const uploadRoomImages = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const room = await Room.findById(params.id);
@@ -94,6 +94,7 @@ export const uploadRoomImages = catchAsyncErrors(
     if (!room) {
       throw new ErrorHandler("Room not found", 404);
     }
+
     const uploader = async (image: string) =>
       upload_file(image, "bookit/rooms");
 
@@ -110,7 +111,7 @@ export const uploadRoomImages = catchAsyncErrors(
   }
 );
 
-// Delete room images  =>  /api/admin/rooms/:id/delete_image
+// Delete room image  =>  /api/admin/rooms/:id/delete_image
 export const deleteRoomImage = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const room = await Room.findById(params.id);
@@ -119,7 +120,9 @@ export const deleteRoomImage = catchAsyncErrors(
     if (!room) {
       throw new ErrorHandler("Room not found", 404);
     }
+
     const isDeleted = await delete_file(body?.imgId);
+
     if (isDeleted) {
       room.images = room?.images.filter(
         (img: IImage) => img.public_id !== body.imgId
@@ -144,7 +147,7 @@ export const deleteRoom = catchAsyncErrors(
       throw new ErrorHandler("Room not found", 404);
     }
 
-    //  Delete images associated with the room
+    // Delete images associated with the room
     for (let i = 0; i < room?.images?.length; i++) {
       await delete_file(room?.images[i].public_id);
     }
@@ -213,7 +216,7 @@ export const canReview = catchAsyncErrors(async (req: NextRequest) => {
   });
 });
 
-// Get all rooms Admin  =>  /api/admin/rooms
+// Get all rooms - ADMIN  =>  /api/admin/rooms
 export const allAdminRooms = catchAsyncErrors(async (req: NextRequest) => {
   const rooms = await Room.find();
 

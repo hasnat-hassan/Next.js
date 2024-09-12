@@ -9,8 +9,7 @@ import {
 import { MDBDataTable } from "mdbreact";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const RoomReviews = () => {
   const [roomId, setRoomId] = useState("");
@@ -28,8 +27,7 @@ const RoomReviews = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {

@@ -5,9 +5,8 @@ import { useDeleteRoomMutation } from "@/redux/api/roomApi";
 import { MDBDataTable } from "mdbreact";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import React, { useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 interface Props {
   data: {
@@ -23,13 +22,12 @@ const AllRooms = ({ data }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {
       router.refresh();
-      toast.success("Room Deleted");
+      toast.success("Room deleted");
     }
   }, [error, isSuccess]);
 
@@ -65,24 +63,28 @@ const AllRooms = ({ data }: Props) => {
               href={`/admin/rooms/${room._id}`}
               className="btn btn-outline-primary"
             >
-              <i className="fa fa-pencil"></i>
+              {" "}
+              <i className="fa fa-pencil"></i>{" "}
             </Link>
             <Link
               href={`/admin/rooms/${room._id}/upload_images`}
-              className="btn btn-outline-success"
+              className="btn btn-outline-success ms-2"
             >
-              <i className="fa fa-images"></i>
+              {" "}
+              <i className="fa fa-images"></i>{" "}
             </Link>
             <button
               className="btn btn-outline-danger ms-2"
               onClick={() => deleteRoomHandler(room._id)}
             >
-              <i className="fa fa-trash"></i>
+              {" "}
+              <i className="fa fa-trash"></i>{" "}
             </button>
           </>
         ),
       });
     });
+
     return data;
   };
 

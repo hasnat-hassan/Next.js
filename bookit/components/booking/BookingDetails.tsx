@@ -87,7 +87,7 @@ const BookingDetails = ({ data }: Props) => {
                 <tr>
                   <th scope="row">Stripe ID:</th>
                   <td>
-                    <b>{booking?.paymentInfo.id}</b>
+                    <b className="redColor">{booking?.paymentInfo.id}</b>
                   </td>
                 </tr>
               )}

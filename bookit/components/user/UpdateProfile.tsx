@@ -8,10 +8,11 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import ButtonLoader from "../layout/ButtonLoader";
 import { setUser } from "@/redux/features/userSlice";
+import { CustomError } from "@/interfaces/customError";
 import { updateUserProfile } from "@/actions/actions";
 import SubmitButton from "../form/SubmitButton";
-import { CustomError } from "@/interface/customError";
 
 const UpdateProfile = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,8 @@ const UpdateProfile = () => {
 
   const { user: currentUser } = useAppSelector((state) => state.auth);
 
-  const [updateProfile, { isSuccess, error }] = useUpdateProfileMutation();
+  const [updateProfile, { isLoading, isSuccess, error }] =
+    useUpdateProfileMutation();
 
   const [updateSession, { data }] = useLazyUpdateSessionQuery();
 
@@ -57,6 +59,7 @@ const UpdateProfile = () => {
 
   const submitHandler = async (formData: FormData) => {
     const res = await updateUserProfile(currentUser?._id, formData);
+
     if (res?.error) {
       toast.error(res?.error);
     }

@@ -1,11 +1,13 @@
+require("dotenv").config({ path: "next.config.js" });
 import Room from "../backend/models/room";
 import mongoose from "mongoose";
 import { rooms } from "./data";
-// require('dotenv').config({ path: 'next.config.js' })
 
 const seedRooms = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/bookit");
+    await mongoose.connect(
+      "mongodb+srv://hasnatrevnix:aDfqcMrfKVUAkChH@bookit.cv6h0.mongodb.net/?retryWrites=true&w=majority&appName=bookit"
+    );
 
     await Room.deleteMany();
     console.log("Rooms are deleted");

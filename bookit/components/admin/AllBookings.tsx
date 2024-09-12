@@ -6,8 +6,7 @@ import { MDBDataTable } from "mdbreact";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 interface Props {
   data: {
@@ -15,8 +14,9 @@ interface Props {
   };
 }
 
-const AllBookings = ({ data = { bookings: [] } }: Props) => {
+const AllBookings = ({ data }: Props) => {
   const bookings = data?.bookings;
+
   const router = useRouter();
 
   const [deleteBooking, { error, isLoading, isSuccess }] =
@@ -24,13 +24,12 @@ const AllBookings = ({ data = { bookings: [] } }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {
       router.refresh();
-      toast.success("Booking Deleted");
+      toast.success("Booking deleted");
     }
   }, [error, isSuccess]);
 
@@ -47,6 +46,7 @@ const AllBookings = ({ data = { bookings: [] } }: Props) => {
           field: "checkin",
           sort: "asc",
         },
+
         {
           label: "Actions",
           field: "actions",
@@ -60,6 +60,7 @@ const AllBookings = ({ data = { bookings: [] } }: Props) => {
       data?.rows?.push({
         id: booking._id,
         checkin: new Date(booking?.checkInDate).toLocaleString("en-US"),
+
         actions: (
           <>
             <Link
@@ -79,7 +80,7 @@ const AllBookings = ({ data = { bookings: [] } }: Props) => {
             <button
               className="btn btn-outline-danger mx-2"
               disabled={isLoading}
-              onClick={() => deleteBookingHandler(booking?.id)}
+              onClick={() => deleteBookingHandler(booking?._id)}
             >
               <i className="fa fa-trash"></i>
             </button>
@@ -90,6 +91,7 @@ const AllBookings = ({ data = { bookings: [] } }: Props) => {
 
     return data;
   };
+
   const deleteBookingHandler = (id: string) => {
     deleteBooking(id);
   };

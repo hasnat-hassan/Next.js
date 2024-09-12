@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
-import { CustomError } from "@/interface/customError";
 
 interface Props {
   token: string;
@@ -24,8 +23,7 @@ const NewPassword = ({ token }: Props) => {
     console.log(error);
 
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {

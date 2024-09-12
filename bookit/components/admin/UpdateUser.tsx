@@ -1,11 +1,11 @@
 "use client";
+
 import { IUser } from "@/backend/models/user";
 import { useUpdateUserMutation } from "@/redux/api/userApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ButtonLoader from "../layout/ButtonLoader";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 interface Props {
   data: {
@@ -19,7 +19,21 @@ const UpdateUser = ({ data }: Props) => {
   const [role, setRole] = useState(data?.user?.role);
 
   const router = useRouter();
+
   const [updateUser, { error, isSuccess, isLoading }] = useUpdateUserMutation();
+
+  useEffect(() => {
+    console.log(error);
+
+    if (error && "data" in error) {
+      toast.error(error?.data?.errMessage);
+    }
+
+    if (isSuccess) {
+      router.refresh();
+      toast.success("User Updated");
+    }
+  }, [error, isSuccess]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,19 +43,9 @@ const UpdateUser = ({ data }: Props) => {
       email,
       role,
     };
+
     updateUser({ id: data?.user?._id, body: userData });
   };
-  useEffect(() => {
-    if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
-    }
-
-    if (isSuccess) {
-      router.refresh();
-      toast.success("User Updated");
-    }
-  }, [error, isSuccess]);
 
   return (
     <div className="row wrapper">

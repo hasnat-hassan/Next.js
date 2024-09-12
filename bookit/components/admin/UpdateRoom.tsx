@@ -1,10 +1,9 @@
 "use client";
 
-import { useUpdateRoomMutation } from "@/redux/api/roomApi";
+import { useNewRoomMutation, useUpdateRoomMutation } from "@/redux/api/roomApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 import { IRoom } from "@/backend/models/room";
 import { revalidateTag } from "@/helpers/revalidate";
@@ -54,8 +53,7 @@ const UpdateRoom = ({ data }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {

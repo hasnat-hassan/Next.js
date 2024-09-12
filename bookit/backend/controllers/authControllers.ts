@@ -164,7 +164,7 @@ export const resetPassword = catchAsyncErrors(
   }
 );
 
-// Get All users  =>  /api/admin/users
+// Get all users  =>  /api/admin/users
 export const allAdminUsers = catchAsyncErrors(async (req: NextRequest) => {
   const users = await User.find();
 
@@ -173,7 +173,7 @@ export const allAdminUsers = catchAsyncErrors(async (req: NextRequest) => {
   });
 });
 
-// get user details  =>  /api/admin/users/:id
+// Get user details  =>  /api/admin/users/:id
 export const getUserDetails = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const user = await User.findById(params.id);
@@ -188,10 +188,11 @@ export const getUserDetails = catchAsyncErrors(
   }
 );
 
-// updtate user details  =>  /api/admin/users/:id
+// Update user details  =>  /api/admin/users/:id
 export const updateUser = catchAsyncErrors(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const body = await req.json();
+
     const newUserData = {
       name: body.name,
       email: body.email,

@@ -3,8 +3,7 @@
 import { useNewRoomMutation } from "@/redux/api/roomApi";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 
 const NewRoom = () => {
@@ -44,8 +43,7 @@ const NewRoom = () => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {

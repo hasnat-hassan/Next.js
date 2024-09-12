@@ -1,5 +1,5 @@
 import Error from "@/app/error";
-import AllRooms from "@/components/admin/AllRooms";
+
 import UpdateRoom from "@/components/admin/UpdateRoom";
 import { getAuthHeader } from "@/helpers/authHeader";
 

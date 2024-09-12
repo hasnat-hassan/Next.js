@@ -1,4 +1,5 @@
 import Error from "@/app/error";
+
 import AllUsers from "@/components/admin/AllUsers";
 import { getAuthHeader } from "@/helpers/authHeader";
 
@@ -6,7 +7,7 @@ export const metadata = {
   title: "All Users - ADMIN",
 };
 
-const allUsers = async () => {
+const getUsers = async () => {
   const authHeaders = getAuthHeader();
 
   const res = await fetch(
@@ -17,7 +18,7 @@ const allUsers = async () => {
 };
 
 export default async function AdminUsersPage() {
-  const data = await allUsers();
+  const data = await getUsers();
 
   if (data?.errMessage) {
     return <Error error={data} />;

@@ -2,13 +2,12 @@
 import { IImage, IRoom } from "@/backend/models/room";
 import { revalidateTag } from "@/helpers/revalidate";
 import {
-  useDeleteRoomImagesMutation,
+  useDeleteRoomImageMutation,
   useUploadRoomImagesMutation,
 } from "@/redux/api/roomApi";
 import { useRouter } from "next/navigation";
 import React, { ChangeEventHandler, useEffect, useRef, useState } from "react";
-import { CustomError } from "@/interface/customError";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import ButtonLoader from "../layout/ButtonLoader";
 
 interface Props {
@@ -41,12 +40,11 @@ const UploadRoomImages = ({ data }: Props) => {
       isLoading: isDeleteLoading,
       isSuccess: isDeleteSuccess,
     },
-  ] = useDeleteRoomImagesMutation();
+  ] = useDeleteRoomImageMutation();
 
   useEffect(() => {
     if (error && "data" in error) {
-      const customError = error.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(error?.data?.errMessage);
     }
 
     if (isSuccess) {
@@ -59,8 +57,7 @@ const UploadRoomImages = ({ data }: Props) => {
 
   useEffect(() => {
     if (deleteError && "data" in deleteError) {
-      const customError = deleteError.data as CustomError;
-      toast.error(customError.errMessage);
+      toast.error(deleteError?.data?.errMessage);
     }
 
     if (isDeleteSuccess) {

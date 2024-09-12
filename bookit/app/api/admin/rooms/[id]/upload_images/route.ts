@@ -5,7 +5,7 @@ import {
   isAuthenticatedUser,
 } from "@/backend/middlewares/auth";
 import { createEdgeRouter } from "next-connect";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 interface RequestContext {
   params: {
@@ -20,5 +20,5 @@ dbConnect();
 router.use(isAuthenticatedUser, authorizeRoles("admin")).put(uploadRoomImages);
 
 export async function PUT(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx) as Promise<NextResponse>;
+  return router.run(request, ctx);
 }
