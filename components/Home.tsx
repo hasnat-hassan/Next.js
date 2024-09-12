@@ -8,18 +8,22 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 interface Props {
-  data: {
+  data?: {
     success: boolean;
     resPerPage: number;
     filteredRoomsCount: number;
     rooms: IRoom[];
   };
 }
-const Home = ({ data }: Props) => {
+
+const Home = ({
+  data = { success: false, resPerPage: 0, filteredRoomsCount: 0, rooms: [] },
+}: Props) => {
   const searchParams = useSearchParams();
   const location = searchParams.get("location");
 
   const { rooms, resPerPage, filteredRoomsCount } = data;
+
   return (
     <div>
       <section id="rooms" className="container mt-5">
