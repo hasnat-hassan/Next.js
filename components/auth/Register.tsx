@@ -9,7 +9,6 @@ import React, {
   useState,
 } from "react";
 import { toast } from "react-hot-toast";
-import ButtonLoader from "../layout/ButtonLoader";
 import { registerUser } from "@/actions/actions";
 import { CustomError } from "@/interfaces/customError";
 import SubmitButton from "../form/SubmitButton";

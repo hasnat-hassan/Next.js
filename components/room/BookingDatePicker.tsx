@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-hot-toast";
+import { CustomError } from "@/interfaces/customError";
 
 interface Props {
   room: IRoom;
@@ -66,7 +67,8 @@ const BookingDatePicker = ({ room }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (checkoutData) {

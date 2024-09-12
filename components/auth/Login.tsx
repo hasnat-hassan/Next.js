@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
+import { CustomError } from "@/interfaces/customError";
 import ButtonLoader from "../layout/ButtonLoader";
 
 const Login = () => {

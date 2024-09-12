@@ -1,7 +1,7 @@
 import dbConnect from "@/backend/config/dbConnect";
 import { webhookCheckout } from "@/backend/controllers/paymentControllers";
 import { createEdgeRouter } from "next-connect";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 interface RequestContext {}
 
@@ -12,5 +12,5 @@ dbConnect();
 router.post(webhookCheckout);
 
 export async function POST(request: NextRequest, ctx: RequestContext) {
-  return router.run(request, ctx);
+  return router.run(request, ctx) as Promise<NextResponse>;
 }

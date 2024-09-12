@@ -1,6 +1,7 @@
 "use client";
 
 import { IRoom } from "@/backend/models/room";
+import { CustomError } from "@/interfaces/customError";
 import { useDeleteRoomMutation } from "@/redux/api/roomApi";
 import { MDBDataTable } from "mdbreact";
 import Link from "next/link";
@@ -22,7 +23,8 @@ const AllRooms = ({ data }: Props) => {
 
   useEffect(() => {
     if (error && "data" in error) {
-      toast.error(error?.data?.errMessage);
+      const customError = error.data as CustomError;
+      toast.error(customError.errMessage);
     }
 
     if (isSuccess) {
